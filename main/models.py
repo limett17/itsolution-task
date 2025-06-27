@@ -4,12 +4,12 @@ from django.db import models
 # model for sources of quotes
 class Source(models.Model):
     SOURCE_TYPES = (
-        ('BOOK', 'Book'),
-        ('MUSIC', 'Music'),
-        ('MOVIE', 'Movie'),
-        ('SERIES', 'Series'),
-        ('CARTOON', 'Cartoon'),
-        ('OTHER', 'Other'),
+        ('КНИГА', 'Книга'),
+        ('МУЗЫКА', 'Музыка'),
+        ('ФИЛЬМ', 'Фильм'),
+        ('СЕРИАЛ', 'Сериал'),
+        ('МУЛЬТФИЛЬМ', 'Мультфильм'),
+        ('ДРУГОЕ', 'Другое'),
     )
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=20, choices=SOURCE_TYPES, default='OTHER')
@@ -25,7 +25,7 @@ class Quote(models.Model):
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
-    prob_rate = models.FloatField(default=0.01)
+    prob_rate = models.PositiveIntegerField(default=2)
     # def get_view_count(self):
     #     return self.views.count()
 
