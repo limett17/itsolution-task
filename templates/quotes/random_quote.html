@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <p>{{ quote.quote }}</p>
+    <p>{{ quote.source.name }}</p>
+    <p>{{ quote.source.type }}</p>
+    
+    <small> Просмотры: {{ quote.views }} </small>
+    
+{% endblock %}
