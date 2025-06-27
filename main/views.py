@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib import messages
 from .models import Quote, Source
 from .forms import QuoteForm
 import random
@@ -8,7 +9,7 @@ import random
 # Create your views here.
 def random_quote(request):
     quotes = Quote.objects.all()
-    quote = random.choice(quotes) if quotes else None
+    quote = random.choices(quotes, weights=[q.prob_rate for q in quotes], k=1)[0]
     return render(request, "quotes/random_quote.html", {"quote": quote})
 
 
@@ -28,7 +29,9 @@ def add_quote(request):
             quote = form.save(commit=False)
             quote.source = source
             quote.save()
+            messages.success(request, "Quote added successfully!")
             print("Добавляем цитату")
+            form = QuoteForm()
         else:
             print(form.errors)
 
