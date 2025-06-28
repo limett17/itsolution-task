@@ -32,7 +32,8 @@ class Quote(models.Model):
 
 class ViewCount(models.Model):
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
-    ip_address = models.GenericIPAddressField(verbose_name='IP Address')
+    # ip_address = models.GenericIPAddressField(verbose_name='IP Address')
+    session = models.CharField(max_length=150, verbose_name='Session', db_index=True, default='0')
 
     class Meta:
-        unique_together = ('quote', 'ip_address')
+        unique_together = ('quote', 'session')

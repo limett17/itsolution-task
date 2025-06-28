@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+
+{% block title %}Add Quote{% endblock %}
+
+{% block content %}
+    <h1>THIS IS THE PAGE TO ADD NEW QUOTES</h1>
+    {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <form id="add_quote_form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="add">Добавить</button>
+    </form>
+{% endblock %}
