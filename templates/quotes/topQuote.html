@@ -1,6 +1,16 @@
 {% extends 'index.html' %}
 
 {% block content %}
-    THIS IS A TOP QUOTES PAGE
-    
+    <h2>Самые популярные цитаты за все время</h2>
+    <ul>
+    {% for quote in quotes %}
+        <li>
+            <blockquote>{{ quote.quote }}</blockquote>
+            <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
+            <p>👍 {{ quote.likes }} | 👎 {{ quote.dislikes }} | 👁 {{ quote.views }}</p>
+        </li>
+    {% empty %}
+        <li>Нет цитат</li>
+    {% endfor %}
+</ul>
 {% endblock %}
