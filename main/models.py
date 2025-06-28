@@ -26,8 +26,6 @@ class Quote(models.Model):
     dislikes = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
     prob_rate = models.PositiveIntegerField(default=2)
-    # def get_view_count(self):
-    #     return self.views.count()
 
 
 class ViewCount(models.Model):
@@ -37,3 +35,15 @@ class ViewCount(models.Model):
 
     class Meta:
         unique_together = ('quote', 'session')
+
+
+class RatingCount(models.Model):
+    quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
+    session = models.CharField(max_length=150, verbose_name='Session', db_index=True, default='0')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    value = models.IntegerField(choices=[(1, 'Нравится'), (2, 'Не нравится')])
+
+    class Meta:
+        unique_together = ('quote', 'session')
+        ordering = ('-timestamp',)
+        indexes = [models.Index(fields=['-timestamp', 'value'])]

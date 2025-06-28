@@ -6,6 +6,47 @@
     <p>{{ quote.source.type }}</p>
     
     <small> Просмотры: {{ quote.views }} </small>
-    
+    <div id="rating-buttons-{{ quote.id }}">
+    <button class="like-btn {% if user_rating == 1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+        👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+    </button>
+    <button  class="dislike-btn {% if user_rating == -1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+        👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+    </button>
+</div>
+
     <button type="reset" onclick="window.location.reload();">Обновить</button>
+    
+    <script>
+    function rateQuote(quoteId, value){
+        fetch("{% url 'rate_quote' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({
+            quote_id: quoteId,
+            value: value
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`like-count-${quoteId}`).textContent = data.likes;
+        document.getElementById(`dislike-count-${quoteId}`).textContent = data.dislikes;
+
+        const likeBtn = document.querySelector(`#rating-buttons-${quoteId} .like-btn`);
+        const dislikeBtn = document.querySelector(`#rating-buttons-${quoteId} .dislike-btn`);
+        likeBtn.classList.remove("active");
+        dislikeBtn.classList.remove("active");
+
+        if (data.current_vote === 1) {
+            likeBtn.classList.add("active");
+        } else if (data.current_vote === -1) {
+            dislikeBtn.classList.add("active");
+        }
+    });
+    }
+    
+    </script>
 {% endblock %}

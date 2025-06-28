@@ -1,0 +1,9 @@
+button.like-btn.active {
+            background-color: green;
+            font-weight: bold;
+        }
+
+        button.dislike-btn.active {
+            background-color: red;
+            font-weight: bold;
+        }
