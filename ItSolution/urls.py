@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.random_quote, name='index'),
     path('add', views.add_quote),
     path('top', views.top_quotes),
+    path('rate_quote', views.rate_quote, name='rate_quote'),
 ]
