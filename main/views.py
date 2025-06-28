@@ -82,7 +82,8 @@ def rate_quote(request):
 
 
 def top_quotes(request):
-    return render(request, "quotes/topQuote.html")
+    quotes = Quote.objects.order_by("-likes")[:10]
+    return render(request, "quotes/topQuote.html", {"quotes": quotes})
 
 
 def add_quote(request):

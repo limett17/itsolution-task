@@ -5,7 +5,7 @@
     <p>{{ quote.source.name }}</p>
     <p>{{ quote.source.type }}</p>
     
-    <small> Просмотры: {{ quote.views }} </small>
+    <small> 👁 {{ quote.views }} </small>
     <div id="rating-buttons-{{ quote.id }}">
     <button class="like-btn {% if user_rating == 1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
         👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
