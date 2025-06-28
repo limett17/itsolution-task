@@ -1,21 +1,30 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib import messages
-from .models import Quote, Source
+from .models import Quote, Source, ViewCount
 from .forms import QuoteForm
 import random
 
 
-# Create your views here.
 def random_quote(request):
     quotes = Quote.objects.all()
     quote = random.choices(quotes, weights=[q.prob_rate for q in quotes], k=1)[0]
-    print(request.META)
+    if not request.session.session_key:
+        request.session.save()
+    session_key = request.session.session_key
+    is_views = ViewCount.objects.filter(quote = quote, session = session_key)
+    if is_views.count() == 0 and str(session_key)!='None':
+        views = ViewCount()
+        views.session = session_key
+        views.quote = quote
+        views.save()
+        quote.views += 1
+        quote.save()
     return render(request, "quotes/random_quote.html", {"quote": quote})
 
 
 def top_quotes(request):
-    return render(request, "topQuote.html")
+    return render(request, "quotes/topQuote.html")
 
 
 def add_quote(request):
@@ -36,4 +45,4 @@ def add_quote(request):
         else:
             print(form.errors)
 
-    return render(request, "addQuote.html", {"form": form})
+    return render(request, "quotes/addQuote.html", {"form": form})
