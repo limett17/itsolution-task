@@ -1,0 +1,6 @@
+{% extends "profile_templates/profile.html" %}
+{% block info %}
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <button onclick="">Изменить пароль</button>
+{% endblock %}

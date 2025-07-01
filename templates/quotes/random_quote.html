@@ -7,13 +7,13 @@
     
     <small> 👁 {{ quote.views }} </small>
     <div id="rating-buttons-{{ quote.id }}">
-    <button class="like-btn {% if user_rating == 1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+    <button class="like-btn {% if user_rating == 1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
         👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
     </button>
-    <button  class="dislike-btn {% if user_rating == -1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+    <button  class="dislike-btn {% if user_rating == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
         👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
     </button>
-</div>
+    </div>
     <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
     <button type="reset" onclick="window.location.reload();">Обновить</button>
     
@@ -56,9 +56,6 @@
         const errorDiv = document.getElementById('rating-error-message');
         if (error && error.error) {
             errorDiv.textContent = error.error;
-        //const errorDiv = document.getElementById('rating-error-message');
-        //if (error.error) {
-            //errorDiv.textContent = "Вы не авторизованы. Войдите, чтобы оценить цитату.";
             errorDiv.style.display = 'block';
         } else {
             errorDiv.textContent = "Неизвестная ошибка.";

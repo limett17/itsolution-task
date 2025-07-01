@@ -1,55 +1,30 @@
-{% extends 'index.html' %}
+{% extends "profile_templates/profile.html" %}
 {% load ratings_extras %}
-
-{% block content %}
-    <h2>Самые популярные цитаты за все время</h2>
+{% block info %}
+    Мои оценки
     <ul>
-    {% for quote in top_quotes %}
-        <li class="quote-block">
+    {% for quote in quotes %}
+        <li>
             <blockquote>{{ quote.quote }}</blockquote>
             <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
             <p>Добавил: {{ quote.author.username }}</p>
             <small>👁 {{ quote.views }}</small>
             <div id="rating-buttons-{{ quote.id }}">
-            <button class="like-btn {% if top_ratings|get_rating:quote.id|default:0 == 1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
+            <button class="like-btn {% if top_ratings|get_rating:quote.id|default:0 == 1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
                 👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
             </button>
-            <button  class="dislike-btn {% if top_ratings|get_rating:quote.id|default:0 == -1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
+            <button  class="dislike-btn {% if top_ratings|get_rating:quote.id|default:0 == -1 %}active{% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
                 👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
             </button>
 
             </div>
-            <div class="rating-error-message" style="color: red; margin-top: 10px;"></div>
         </li>
     {% empty %}
-        <li>Нет цитат</li>
-    {% endfor %}
-    </ul>
-    <h2>Последние добавленные цитаты</h2>
-    <ul>
-    {% for quote in latest_quotes %}
-        <li class="quote-block">
-            <blockquote>{{ quote.quote }}</blockquote>
-            <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
-            <p>Добавил: {{ quote.author.username }}</p>
-            <small>👁 {{ quote.views }}</small>
-            <div id="rating-buttons-{{ quote.id }}">
-            <button class="like-btn {% if latest_ratings|get_rating:quote.id|default:0 == 1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
-                👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
-            </button>
-            <button  class="dislike-btn {% if latest_ratings|get_rating:quote.id|default:0 == -1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
-                👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
-            </button>
-
-            </div>
-            <div class="rating-error-message" style="color: red; margin-top: 10px;"></div>
-        </li>
-    {% empty %}
-        <li>Нет цитат</li>
+        <li>Вы пока не оценили ни одной цитаты.</li>
     {% endfor %}
     </ul>
     <script>
-    function rateQuote(buttonElem, quoteId, value){
+    function rateQuote(quoteId, value){
         fetch("{% url 'rate_quote' %}", {
         method: "POST",
         headers: {
@@ -83,9 +58,8 @@
         }
     })
     .catch(error => {
-        console.error("Ошибка с сервера:", error);
-        const quoteBlock = buttonElem.closest(".quote-block");
-        const errorDiv = quoteBlock.querySelector(".rating-error-message");
+        console.error("Ошибка с сервера:", error); // <--- ВАЖНО
+        const errorDiv = document.getElementById('rating-error-message');
         if (error && error.error) {
             errorDiv.textContent = error.error;
             errorDiv.style.display = 'block';

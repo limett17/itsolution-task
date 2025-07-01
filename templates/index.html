@@ -15,6 +15,7 @@
             {% if user.is_authenticated %}
                 <a href="/add">Добавить цитату</a> |
                 <a href="{% url 'profile' %}">Личный кабинет</a>
+                {{ user.username }}
                 <a href="{% url 'logout' %}" id="logout-link">Выйти</a>
             {% else %}
             <a href="/login">Войти</a> |
@@ -23,7 +24,7 @@
         </nav>
     </header>
 {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      <li{% if message.tags %} class="{{ message.tags }} " style="list-style: none; color: darkslateblue; margin-top: 10px;"{% endif %}>{{ message }}</li>
 {% endfor %}
 <div>
     {% block content %}

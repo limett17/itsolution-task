@@ -3,11 +3,10 @@
 {% block title %}Add Quote{% endblock %}
 
 {% block content %}
-    <h1>THIS IS THE PAGE TO ADD NEW QUOTES</h1>
     {% if messages %}
     <ul class="messages">
     {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      <li{% if message.tags %} class="{{ message.tags }}" style="list-style: none; color: darkslateblue; margin-top: 10px;" {% endif %}>{{ message }}</li>
     {% endfor %}
     </ul>
     {% endif %}
