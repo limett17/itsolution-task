@@ -7,6 +7,7 @@
         <li>
             <blockquote>{{ quote.quote }}</blockquote>
             <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
+            <p>Добавил: {{ quote.author.username }}</p>
             <p>👍 {{ quote.likes }} | 👎 {{ quote.dislikes }} | 👁 {{ quote.views }}</p>
         </li>
     {% empty %}

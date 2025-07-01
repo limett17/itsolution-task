@@ -2,8 +2,8 @@
 
 {% block content %}
     <p>{{ quote.quote }}</p>
-    <p>{{ quote.source.name }}</p>
-    <p>{{ quote.source.type }}</p>
+    <p>{{ quote.source.name }}, {{ quote.source.type }}</p>
+    <p>Добавил: {{ quote.author.username }}</p>
     
     <small> 👁 {{ quote.views }} </small>
     <div id="rating-buttons-{{ quote.id }}">
@@ -14,7 +14,7 @@
         👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
     </button>
 </div>
-
+<div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
     <button type="reset" onclick="window.location.reload();">Обновить</button>
     
     <script>
@@ -29,6 +29,14 @@
             quote_id: quoteId,
             value: value
         })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw data; // Передаём JSON с ошибкой в .catch
+            });
+        }
+        return response.json();
     })
     .then(response => response.json())
     .then(data => {
@@ -45,7 +53,21 @@
         } else if (data.current_vote === -1) {
             dislikeBtn.classList.add("active");
         }
-    });
+    })
+    .catch(error => {
+    const errorDiv = document.getElementById('rating-error-message');
+    if (error.error) {
+        errorDiv.textContent = "Вы не авторизованы. Войдите, чтобы оценить цитату.";
+        errorDiv.style.display = 'block';
+    } else {
+        errorDiv.textContent = "Неизвестная ошибка.";
+    }
+
+    // Через 3 секунды скрываем
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 5000);
+});
     }
     
     </script>
