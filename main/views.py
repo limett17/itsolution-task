@@ -19,7 +19,7 @@ def random_quote(request):
 
     user_rating = 0
     if request.user.is_authenticated:
-        user= request.user
+        user = request.user
 
         try:
             rating = RatingCount.objects.get(quote=quote, user=user)
@@ -94,12 +94,27 @@ def rate_quote(request):
 
 
 def top_quotes(request):
-    quotes = Quote.objects.order_by("-likes")[:10]
-    return render(request, "quotes/topQuote.html", {"quotes": quotes})
+    top = Quote.objects.order_by("-likes")[:10]
+    latest = Quote.objects.order_by("-timestamp")[:10]
+    top_ratings_dict = {}
+    latest_ratings_dict = {}
+    if request.user.is_authenticated:
+        top_ratings = RatingCount.objects.filter(user=request.user, quote__in=top)
+        latest_ratings = RatingCount.objects.filter(user=request.user, quote__in=latest)
+        top_ratings_dict = {r.quote_id: r.value for r in top_ratings}
+        latest_ratings_dict = {r.quote_id: r.value for r in latest_ratings}
+
+    return render(request, "quotes/topQuote.html", {
+        "top_quotes": top,
+        "latest_quotes": latest,
+        "top_ratings": top_ratings_dict,
+        "latest_ratings": latest_ratings_dict})
+
 
 @login_required
 def add_quote(request):
     form = QuoteForm()
+
     if request.method == "POST":
         form = QuoteForm(request.POST)
         if form.is_valid():
@@ -126,6 +141,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            messages.success(request, "Вы успешно зарегистрированы!")
             return redirect('/')
     else:
         form = SignUpForm()
@@ -145,9 +161,30 @@ def login_view(request):
                 return redirect('/')
     return render(request, "quotes/login.html", {'form': form})
 
+
 @login_required
-def profile_view(request):
-    return render(request, "quotes/profile.html")
+def profile_info(request):
+    return render(request, "profile_templates/profile_info.html")
+
+
+@login_required
+def my_quotes(request):
+    quotes = Quote.objects.filter(author=request.user).order_by("-timestamp")
+    return render(request, "profile_templates/my_quotes.html", {"quotes": quotes})
+
+
+@login_required
+def my_rated_quotes(request):
+    rated = RatingCount.objects.filter(user=request.user).select_related("quote").order_by("-timestamp")
+    quotes = [r.quote for r in rated]
+    return render(request, "profile_templates/my_rated_quotes.html", {"quotes": quotes})
+
+
+@login_required
+def my_history(request):
+    viewed = ViewCount.objects.filter(user=request.user).select_related("quote").order_by("-timestamp")
+    quotes = [r.quote for r in viewed]
+    return render(request, "profile_templates/my_history.html", {"quotes": quotes})
 
 
 def logout_view(request):

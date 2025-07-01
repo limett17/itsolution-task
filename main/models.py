@@ -28,11 +28,13 @@ class Quote(models.Model):
     views = models.PositiveIntegerField(default=0)
     prob_rate = models.PositiveIntegerField(default=-1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class ViewCount(models.Model):
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('quote', 'user')

@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% block content %}
+    <p>Личный кабинет</p>
+    <div id="profile_nav">
+    <a href="/profile">Профиль</a>
+    <a href="/profile/mine">Мои цитаты</a>
+    <a href="/profile/rated">Оцененные</a>
+    <a href="/profile/history">Просмотренные</a>
+    </div>
+    {% block info %}
+        
+    {% endblock %}
+{% endblock %}
