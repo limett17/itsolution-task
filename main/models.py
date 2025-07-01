@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # model for sources of quotes
@@ -25,25 +26,25 @@ class Quote(models.Model):
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
-    prob_rate = models.PositiveIntegerField(default=2)
+    prob_rate = models.PositiveIntegerField(default=-1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ViewCount(models.Model):
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
-    # ip_address = models.GenericIPAddressField(verbose_name='IP Address')
-    session = models.CharField(max_length=150, verbose_name='Session', db_index=True, default='0')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('quote', 'session')
+        unique_together = ('quote', 'user')
 
 
 class RatingCount(models.Model):
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
-    session = models.CharField(max_length=150, verbose_name='Session', db_index=True, default='0')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    value = models.IntegerField(choices=[(1, 'Нравится'), (2, 'Не нравится')])
+    value = models.IntegerField(choices=[(1, 'Нравится'), (-1, 'Не нравится')])
 
     class Meta:
-        unique_together = ('quote', 'session')
+        unique_together = ('quote', 'user')
         ordering = ('-timestamp',)
         indexes = [models.Index(fields=['-timestamp', 'value'])]

@@ -1,6 +1,8 @@
 from django import forms
 from .models import Quote, Source
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 
 
 class QuoteForm(forms.ModelForm):
@@ -39,3 +41,16 @@ class QuoteForm(forms.ModelForm):
             except Source.DoesNotExist:
                 pass
         return cleaned_data
+
+
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Имя пользователя")
+    password = forms.CharField(label="Пароль", widget=forms.PasswordInput)
