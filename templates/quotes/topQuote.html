@@ -6,7 +6,7 @@
     <div class="top-quotes-section">
     <div class="top-block glass-block">
     <h2>Самые популярные цитаты за все время</h2>
-    <ul>
+    <ul class="quote-list">
     {% for quote in top_quotes %}
         <li class="quote-block">
             <blockquote>{{ quote.quote }}</blockquote>
@@ -14,13 +14,13 @@
             <p>Добавил: {{ quote.author.username }}</p>
             <div id="rating-buttons-{{ quote.id }}">
                 <small><img src="{% static "img/ico/eye-32.ico" %}" class="ico"> {{ quote.views }} </small>
-                <button class="like-btn {% if top_ratings|get_rating:quote.id == 1  %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+                <button class="like-btn {% if top_ratings|get_rating:quote.id == 1  %} active {% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
                     <img src="{% static 'img/ico/like-heart2.png' %}" alt='like'>
-                    <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+                    <span class="like-count-{{ quote.id }}">{{ quote.likes }}</span>
                 </button>
-                <button  class="dislike-btn {% if top_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+                <button  class="dislike-btn {% if top_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
                     <img src="{% static 'img/ico/dislike-heart.png' %}" alt='dislike'>
-                    <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+                    <span class="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
                 </button>
                 
                 <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
@@ -34,7 +34,7 @@
     </div>
     <div class="latest-block glass-block">
     <h2>Последние добавленные цитаты</h2>
-    <ul>
+    <ul class="quote-list">
     {% for quote in latest_quotes %}
         <li class="quote-block">
             <blockquote>{{ quote.quote }}</blockquote>
@@ -42,13 +42,13 @@
             <p>Добавил: {{ quote.author.username }}</p>
             <div id="rating-buttons-{{ quote.id }}">
                 <small><img src="{% static "img/ico/eye-32.ico" %}" class="ico"> {{ quote.views }} </small>
-                <button class="like-btn {% if latest_ratings|get_rating:quote.id == 1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+                <button class="like-btn {% if latest_ratings|get_rating:quote.id == 1 %} active {% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
                     <img src="{% static 'img/ico/like-heart2.png' %}" alt='like'>
-                    <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+                    <span class="like-count-{{ quote.id }}">{{ quote.likes }}</span>
                 </button>
-                <button  class="dislike-btn {% if latest_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+                <button  class="dislike-btn {% if latest_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
                     <img src="{% static 'img/ico/dislike-heart.png' %}" alt='dislike'>
-                    <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+                    <span class="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
                 </button>
                 
                 <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
@@ -82,19 +82,40 @@
         return response.json();
     })
     .then(data => {
-        document.getElementById(`like-count-${quoteId}`).textContent = data.likes;
-        document.getElementById(`dislike-count-${quoteId}`).textContent = data.dislikes;
+        
+        document.querySelectorAll(`.like-count-${quoteId}`).forEach(el => {
+            el.textContent = data.likes;
+        });
+        document.querySelectorAll(`.dislike-count-${quoteId}`).forEach(el => {
+            el.textContent = data.dislikes;
+        });
 
-        const likeBtn = document.querySelector(`#rating-buttons-${quoteId} .like-btn`);
-        const dislikeBtn = document.querySelector(`#rating-buttons-${quoteId} .dislike-btn`);
-        likeBtn.classList.remove("active");
-        dislikeBtn.classList.remove("active");
+        document.querySelectorAll(`#rating-buttons-${quoteId} .like-btn`).forEach(btn => {
+            btn.classList.remove("active");
+            if (data.current_vote === 1) {
+                btn.classList.add("active");
+            }
+        });
+        document.querySelectorAll(`#rating-buttons-${quoteId} .dislike-btn`).forEach(btn => {
+            btn.classList.remove("active");
+            if (data.current_vote === -1) {
+                btn.classList.add("active");
+            }
+        });
 
-        if (data.current_vote === 1) {
-            likeBtn.classList.add("active");
-        } else if (data.current_vote === -1) {
-            dislikeBtn.classList.add("active");
-        }
+        document.querySelectorAll(`#rating-buttons-${quoteId} .like-btn`).forEach(btn => {
+            btn.classList.remove("active");
+            if (data.current_vote === 1) {
+                btn.classList.add("active");
+            }
+        });
+        document.querySelectorAll(`#rating-buttons-${quoteId} .dislike-btn`).forEach(btn => {
+            btn.classList.remove("active");
+            if (data.current_vote === -1) {
+                btn.classList.add("active");
+            }
+        });
+
     })
     .catch(error => {
         console.error("Ошибка с сервера:", error);

@@ -350,3 +350,68 @@ blockquote {
     padding-left: 32px;
     padding-top: 20px;
 }
+/*-------------QUOTES------------*/
+ul.quote-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+li.quote-block {
+
+    padding: 20px 25px;
+
+    color: white;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+
+}
+
+li.quote-block blockquote {
+    margin: 0 0 10px 0;
+    font-style: italic;
+    quotes: "«" "»" "„" "“";
+}
+
+li.quote-block blockquote::before {
+    content: open-quote;
+    font-size: 28px;
+    line-height: 0;
+    vertical-align: -0.4em;
+}
+
+li.quote-block blockquote::after {
+    content: close-quote;
+    font-size: 28px;
+    line-height: 0;
+    vertical-align: -0.4em;
+}
+
+li.quote-block p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+li.quote-block small,
+li.quote-block .ico {
+    vertical-align: middle;
+    margin-right: 6px;
+    opacity: 0.8;
+}
+.messages{
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    color: white;
+    font-size: 18px;
+    line-height: 1.5;
+}
