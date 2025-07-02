@@ -170,21 +170,37 @@ def profile_info(request):
 @login_required
 def my_quotes(request):
     quotes = Quote.objects.filter(author=request.user).order_by("-timestamp")
-    return render(request, "profile_templates/my_quotes.html", {"quotes": quotes})
+    ratings = RatingCount.objects.filter(user=request.user, quote__in=quotes)
+    ratings_dict = {r.quote_id: r.value for r in ratings}
+    return render(request, "profile_templates/my_quotes.html", {
+        "quotes": quotes,
+        "top_ratings": ratings_dict,
+    })
 
 
 @login_required
 def my_rated_quotes(request):
     rated = RatingCount.objects.filter(user=request.user).select_related("quote").order_by("-timestamp")
     quotes = [r.quote for r in rated]
-    return render(request, "profile_templates/my_rated_quotes.html", {"quotes": quotes})
+    ratings = RatingCount.objects.filter(user=request.user, quote__in=quotes)
+    ratings_dict = {r.quote_id: r.value for r in ratings}
+    return render(request, "profile_templates/my_rated_quotes.html", {
+        "quotes": quotes,
+        "top_ratings": ratings_dict,
+    })
 
 
 @login_required
 def my_history(request):
     viewed = ViewCount.objects.filter(user=request.user).select_related("quote").order_by("-timestamp")
     quotes = [r.quote for r in viewed]
-    return render(request, "profile_templates/my_history.html", {"quotes": quotes})
+    ratings = RatingCount.objects.filter(user=request.user, quote__in=quotes)
+    ratings_dict = {r.quote_id: r.value for r in ratings}
+
+    return render(request, "profile_templates/my_history.html", {
+        "quotes": quotes,
+        "top_ratings": ratings_dict,
+    })
 
 
 def logout_view(request):
