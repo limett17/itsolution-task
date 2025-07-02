@@ -1,6 +1,6 @@
 {% extends "profile_templates/profile.html" %}
 {% block info %}
     <p>Имя пользователя: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
-    <button onclick="">Изменить пароль</button>
+    <p>Email: {% if user.email  %}{{ user.email }}{% else %}Отсутствует{% endif %}</p>
+    <a href="{% url 'password_change' %}" class="profile-button">Изменить пароль</a>
 {% endblock %}

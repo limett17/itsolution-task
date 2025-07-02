@@ -1,7 +1,10 @@
 {% extends 'index.html' %}
 {% load ratings_extras %}
+{% load static %}
 
-{% block content %}
+{% block tops %}
+    <div class="top-quotes-section">
+    <div class="top-block glass-block">
     <h2>Самые популярные цитаты за все время</h2>
     <ul>
     {% for quote in top_quotes %}
@@ -9,22 +12,27 @@
             <blockquote>{{ quote.quote }}</blockquote>
             <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
             <p>Добавил: {{ quote.author.username }}</p>
-            <small>👁 {{ quote.views }}</small>
             <div id="rating-buttons-{{ quote.id }}">
-            <button class="like-btn {% if top_ratings|get_rating:quote.id|default:0 == 1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
-                👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
-            </button>
-            <button  class="dislike-btn {% if top_ratings|get_rating:quote.id|default:0 == -1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
-                👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
-            </button>
-
-            </div>
+                <small><img src="{% static "img/ico/eye-32.ico" %}" class="ico"> {{ quote.views }} </small>
+                <button class="like-btn {% if top_ratings|get_rating:quote.id == 1  %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+                    <img src="{% static 'img/ico/like-heart2.png' %}" alt='like'>
+                    <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+                </button>
+                <button  class="dislike-btn {% if top_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+                    <img src="{% static 'img/ico/dislike-heart.png' %}" alt='dislike'>
+                    <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+                </button>
+                
+                <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
+            </div>  
             <div class="rating-error-message" style="color: red; margin-top: 10px;"></div>
         </li>
     {% empty %}
         <li>Нет цитат</li>
     {% endfor %}
     </ul>
+    </div>
+    <div class="latest-block glass-block">
     <h2>Последние добавленные цитаты</h2>
     <ul>
     {% for quote in latest_quotes %}
@@ -32,22 +40,28 @@
             <blockquote>{{ quote.quote }}</blockquote>
             <p><strong>Источник:</strong> {{ quote.source.name }} ({{ quote.source.type }})</p>
             <p>Добавил: {{ quote.author.username }}</p>
-            <small>👁 {{ quote.views }}</small>
             <div id="rating-buttons-{{ quote.id }}">
-            <button class="like-btn {% if latest_ratings|get_rating:quote.id|default:0 == 1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, 1)">
-                👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
-            </button>
-            <button  class="dislike-btn {% if latest_ratings|get_rating:quote.id|default:0 == -1 %}active{% endif %}" onclick="rateQuote(this, {{ quote.id }}, -1)">
-                👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
-            </button>
+                <small><img src="{% static "img/ico/eye-32.ico" %}" class="ico"> {{ quote.views }} </small>
+                <button class="like-btn {% if latest_ratings|get_rating:quote.id == 1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
+                    <img src="{% static 'img/ico/like-heart2.png' %}" alt='like'>
+                    <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+                </button>
+                <button  class="dislike-btn {% if latest_ratings|get_rating:quote.id == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
+                    <img src="{% static 'img/ico/dislike-heart.png' %}" alt='dislike'>
+                    <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+                </button>
+                
+                <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
+            </div>  
 
-            </div>
             <div class="rating-error-message" style="color: red; margin-top: 10px;"></div>
         </li>
     {% empty %}
         <li>Нет цитат</li>
     {% endfor %}
     </ul>
+    </div>
+    </div>
     <script>
     function rateQuote(buttonElem, quoteId, value){
         fetch("{% url 'rate_quote' %}", {

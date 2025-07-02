@@ -3,6 +3,8 @@
 {% block title %}Add Quote{% endblock %}
 
 {% block content %}
+    <div class="form-glass">
+    <h2 class="h2-add">Добавить цитату</h2>
     {% if messages %}
     <ul class="messages">
     {% for message in messages %}
@@ -10,10 +12,12 @@
     {% endfor %}
     </ul>
     {% endif %}
-    <form id="add_quote_form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+    
+        <form id="add_quote_form" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Добавить цитату</button>
+        </form>
+    </div>
 
-        <button type="submit" class="add">Добавить</button>
-    </form>
 {% endblock %}
