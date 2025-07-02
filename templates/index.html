@@ -23,9 +23,11 @@
             {% endif %}
         </nav>
     </header>
+<div {% if messages %}class="messages"{% endif %}>
 {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }} " style="list-style: none; color: darkslateblue; margin-top: 10px;"{% endif %}>{{ message }}</li>
+      <li{% if message.tags %} class="{{ message.tags }} " style="list-style: none; color: aliceblue; margin-top: 10px;"{% endif %}>{{ message }}</li>
 {% endfor %}
+</div>
     <div >
         {% block content %}
     

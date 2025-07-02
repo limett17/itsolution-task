@@ -51,7 +51,8 @@ def rate_quote(request):
         user = request.user
 
         existing = RatingCount.objects.filter(quote_id=quote_id, user=user).first()
-
+        #print(existing.value)
+        print(value)
         if existing:
             if existing.value == value:
                 existing.delete()
@@ -59,7 +60,8 @@ def rate_quote(request):
                     quote.likes = max(quote.likes - 1, 0)
                 else:
                     quote.dislikes = max(quote.dislikes - 1, 0)
-                current_vote = None
+                current_vote = 0
+
             else:
                 if existing.value == 1:
                     quote.likes = max(0, quote.likes - 1)
