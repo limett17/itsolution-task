@@ -1,13 +1,20 @@
 {% extends "index.html" %}
+{% load static %}
 {% block content %}
-    <p>Личный кабинет</p>
-    <div id="profile_nav">
-    <a href="/profile">Профиль</a>
-    <a href="/profile/mine">Мои цитаты</a>
-    <a href="/profile/rated">Оцененные</a>
-    <a href="/profile/history">Просмотренные</a>
-    </div>
-    {% block info %}
-        
-    {% endblock %}
+<div class="profile-container">
+    <aside class="profile-nav">
+        <h2>Личный кабинет</h2>
+        <nav id="profile_nav">
+            <a href="/profile" class="{% if request.resolver_match.view_name == 'profile' %}active{% endif %}">Профиль</a>
+            <a href="/profile/mine" class="{% if request.path == '/profile/mine' %}active{% endif %}">Мои цитаты</a>
+            <a href="/profile/rated" class="{% if request.path == '/profile/rated' %}active{% endif %}">Оцененные</a>
+            <a href="/profile/history" class="{% if request.path == '/profile/history' %}active{% endif %}">Просмотренные</a>
+        </nav>
+    </aside>
+
+    <section class="profile-content">
+        {% block info %}
+        {% endblock %}
+    </section>
+</div>
 {% endblock %}

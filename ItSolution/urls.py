@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from main import views
 
@@ -17,4 +17,7 @@ urlpatterns = [
     path('profile/history', views.my_history, name='my_history'),
     path('profile/', views.profile_info, name='profile'),
     path('logout/', views.logout_view, name='logout'),
+    path('profile/password_change/', auth_views.PasswordChangeView.as_view(template_name='profile_templates/password_change.html'), name='password_change'),
+    path('profile/password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='profile_templates/password_change_done.html'), name='password_change_done'),
+
 ]

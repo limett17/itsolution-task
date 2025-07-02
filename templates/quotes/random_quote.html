@@ -1,22 +1,29 @@
 {% extends 'index.html' %}
+{% load static %}
 
 {% block content %}
     <p>{{ quote.quote }}</p>
     <p>{{ quote.source.name }}, {{ quote.source.type }}</p>
     <p>Добавил: {{ quote.author.username }}</p>
     
-    <small> 👁 {{ quote.views }} </small>
+    
     <div id="rating-buttons-{{ quote.id }}">
+    <small><img src="{% static "img/ico/eye-32.ico" %}" class="ico"> {{ quote.views }} </small>
     <button class="like-btn {% if user_rating == 1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, 1)">
-        👍 <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
+        <img src="{% static 'img/ico/like-heart2.png' %}" alt='like'>
+        <span id="like-count-{{ quote.id }}">{{ quote.likes }}</span>
     </button>
     <button  class="dislike-btn {% if user_rating == -1 %} active {% endif %}" onclick="rateQuote({{ quote.id }}, -1)">
-        👎 <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
+        <img src="{% static 'img/ico/dislike-heart.png' %}" alt='dislike'>
+        <span id="dislike-count-{{ quote.id }}">{{ quote.dislikes }}</span>
     </button>
-    </div>
-    <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
-    <button type="reset" onclick="window.location.reload();">Обновить</button>
     
+    
+    <button class="refresh-btn" type="reset" onclick="window.location.reload();">
+        <img src="{% static 'img/ico/refresh.ico' %}" alt="refresh" class="icon">
+    </button>
+    <div id="rating-error-message" style="color: red; margin-top: 10px;"></div>
+    </div>
     <script>
     function rateQuote(quoteId, value){
         fetch("{% url 'rate_quote' %}", {
